@@ -98,7 +98,8 @@ public final class PostOperationRelatedBulkAssert<T> implements Operation<T>
         // Note: foreign id has to be added to data as well here (not only as predicate) to avoid exception because of empty data
         return resolvedRowReference.builderWithReferenceData(transactionContext,
                 mRowData.updatedBuilder(transactionContext,
-                        mTable.assertOperation(EmptyUriParams.INSTANCE, new AllOf(mPredicate, resolvedRowReference.predicate(mForeignKeyColumn)))
+                        mTable.assertOperation(EmptyUriParams.INSTANCE,
+                                new AllOf(mPredicate, resolvedRowReference.predicate(transactionContext, mForeignKeyColumn)))
                                 .contentOperationBuilder(transactionContext)), mForeignKeyColumn);
     }
 }

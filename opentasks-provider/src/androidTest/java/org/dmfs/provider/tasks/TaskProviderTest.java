@@ -30,12 +30,15 @@ import org.dmfs.android.contentpal.Table;
 import org.dmfs.android.contentpal.batches.MultiBatch;
 import org.dmfs.android.contentpal.batches.SingletonBatch;
 import org.dmfs.android.contentpal.operations.Assert;
+import org.dmfs.android.contentpal.operations.BulkAssert;
 import org.dmfs.android.contentpal.operations.BulkDelete;
+import org.dmfs.android.contentpal.operations.Counted;
 import org.dmfs.android.contentpal.operations.Delete;
 import org.dmfs.android.contentpal.operations.Put;
 import org.dmfs.android.contentpal.operations.Related;
 import org.dmfs.android.contentpal.predicates.AllOf;
 import org.dmfs.android.contentpal.predicates.EqArg;
+import org.dmfs.android.contentpal.predicates.ReferringTo;
 import org.dmfs.android.contentpal.queues.BasicOperationsQueue;
 import org.dmfs.android.contentpal.rowdata.Composite;
 import org.dmfs.android.contentpal.rowdata.EmptyRowData;
@@ -133,11 +136,18 @@ public class TaskProviderTest
 
         assertThat(new MultiBatch(
                 new Put<>(taskList, new NameData("list1")),
-                new Put<>(task, new TitleData("task1"))
+                new Put<>(task, new TitleData("task1")),
+
+                // TODO (putting in here to see if they pass in the same transaction as well)
+                new Counted<>(1, new BulkAssert<>(new InstanceTable(mAuthority), new ReferringTo<>(Instances.TASK_ID, task))),
+                new PostOperationRelatedAssert<>(new InstanceTable(mAuthority), task, Instances.TASK_ID)
 
         ), resultsIn(mClient,
                 new Assert<>(taskList, new NameData("list1")),
                 new Assert<>(task, new TitleData("task1")),
+
+                // TODO
+                new Counted<>(1, new BulkAssert<>(new InstanceTable(mAuthority), new ReferringTo<>(Instances.TASK_ID, task))),
                 new PostOperationRelatedAssert<>(new InstanceTable(mAuthority), task, Instances.TASK_ID)
         ));
     }
