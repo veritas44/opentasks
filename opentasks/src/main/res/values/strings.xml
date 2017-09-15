@@ -253,6 +253,6 @@
     <string name="share_as_task">Create Task</string>
 
     <!-- Outgoing share -->
-    <string name="opentasks_share_footer">Shared by OpenTasks</string>
+    <string name="opentasks_share_footer">Shared via OpenTasks</string>
 
 </resources>
